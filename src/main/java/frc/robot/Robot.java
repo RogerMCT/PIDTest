@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -12,12 +13,20 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    SmartDashboard.putNumber("P Value", Constants.DriveConstants.kTurnP);
+    SmartDashboard.putNumber("I Value", Constants.DriveConstants.kTurnI);
+    SmartDashboard.putNumber("D Value", Constants.DriveConstants.kTurnD);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("Left Drive Encoder", m_robotContainer.m_robotDrive.getLeftEncoder().getPosition());
+    SmartDashboard.putNumber("Right Drive Encoder", m_robotContainer.m_robotDrive.getRightEncoder().getPosition());
+    SmartDashboard.putNumber("AVG Drive Encoder", m_robotContainer.m_robotDrive.getAverageEncoderPosition());
+    SmartDashboard.putNumber("Gryo Heading", m_robotContainer.m_robotDrive.getHeading());
   }
+
 
   @Override
   public void disabledInit() {}

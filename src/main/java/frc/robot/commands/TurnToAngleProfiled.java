@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
@@ -17,9 +18,9 @@ public class TurnToAngleProfiled extends ProfiledPIDCommand {
   public TurnToAngleProfiled(double targetAngleDegrees, DriveSubsystem drive) {
     super(
         new ProfiledPIDController(
-            DriveConstants.kTurnP,
-            DriveConstants.kTurnI,
-            DriveConstants.kTurnD,
+          DriveConstants.kTurnP, 
+          DriveConstants.kTurnI, 
+          DriveConstants.kTurnD,
             new TrapezoidProfile.Constraints(
                 DriveConstants.kMaxTurnRateDegPerS,
                 DriveConstants.kMaxTurnAccelerationDegPerSSquared)),

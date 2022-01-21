@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
@@ -23,14 +24,24 @@ public class DriveSubsystem extends SubsystemBase {
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   public DriveSubsystem() {
+    m_leftMotors.restoreFactoryDefaults();
+    m_leftSlave.restoreFactoryDefaults();
+    m_rightMotors.restoreFactoryDefaults();
+    m_rightSlave.restoreFactoryDefaults();
     m_leftSlave.follow(m_leftMotors);
-    m_rightSlave.follow(m_rightSlave);
-    m_rightMotors.setInverted(true);
-    m_rightEncoder.setInverted(true);
+    m_rightSlave.follow(m_rightMotors);
+    //m_rightMotors.setInverted(true);
+    m_leftMotors.setInverted(true);
   }
 
   public void arcadeDrive(double fwd, double rot) {
-    m_drive.arcadeDrive(fwd, rot);
+    SmartDashboard.putString("Arcade Drive Values", fwd + " : " + -rot);
+    m_drive.arcadeDrive(fwd, -rot);
+  }
+
+  public void tankDrive(double left, double right){
+    //SmartDashboard.putString("Tank Drive Values", left + " : " + right);
+    m_drive.tankDrive(left*.5, right*.5);
   }
 
   public void resetEncoders() {

@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  public final DriveSubsystem m_robotDrive = new DriveSubsystem();
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
   public RobotContainer() {
@@ -24,9 +24,16 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(
         new RunCommand(
             () ->
-                m_robotDrive.arcadeDrive(
-                    -m_driverController.getLeftY(), m_driverController.getRightX()),
+                m_robotDrive.tankDrive(
+                    m_driverController.getLeftY(), m_driverController.getRightY()),
             m_robotDrive));
+
+    //m_robotDrive.setDefaultCommand(
+    //    new RunCommand(
+    //        () ->
+    //            m_robotDrive.arcadeDrive(
+    //                -m_driverController.getLeftY(), m_driverController.getRightX()),
+    //        m_robotDrive));
   }
 
   private void configureButtonBindings() {
@@ -48,17 +55,21 @@ public class RobotContainer {
                 // Setpoint is 0
                 0,
                 // Pipe the output to the turning controls
-                output -> m_robotDrive.arcadeDrive(-m_driverController.getLeftY(), output),
+                output -> m_robotDrive.arcadeDrive(m_driverController.getLeftY(), output),
                 // Require the robot drive
                 m_robotDrive));
 
     // Turn to 90 degrees when the 'X' button is pressed, with a 5 second timeout
     new JoystickButton(m_driverController, Button.kX.value)
-        .whenPressed(new TurnToAngle(90, m_robotDrive).withTimeout(5));
+        .whenPressed(new TurnToAngle(-90, m_robotDrive).withTimeout(5));
 
     // Turn to -90 degrees with a profile when the B button is pressed, with a 5 second timeout
     new JoystickButton(m_driverController, Button.kB.value)
-        .whenPressed(new TurnToAngleProfiled(-90, m_robotDrive).withTimeout(5));
+        .whenPressed(new TurnToAngleProfiled(90, m_robotDrive).withTimeout(5));
+
+    // Reset Heading when 'Y' button is pressed, with a 1 second timeout
+    new JoystickButton(m_driverController, Button.kY.value)
+        .whenPressed(new InstantCommand(() -> m_robotDrive.zeroHeading()));
   }
 
   public Command getAutonomousCommand() {
